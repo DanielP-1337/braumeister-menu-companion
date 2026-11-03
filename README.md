@@ -24,4 +24,6 @@ This Home Assistant integration connects the [Braumeister Display Card](https://
 
 The integration calls the Bridge on `127.0.0.1:8642` from HA Core and waits for the result. It submits each action once and requires fresh device status with both actuators off. Recipe picker highlights refresh after confirmed card actions.
 
-This beta covers menu navigation. End-to-end validation of the dashboard control path on hardware is pending.
+The dashboard control path was tested end to end on a Braumeister 20L Plus. Menu navigation also worked while the browser was signed out of MySpeidel.
+
+Testing Home Assistant and the Bridge with internet access blocked is still pending. The tested Bridge control path delivers a local key only after a matching poll receives the expected MySpeidel acknowledgment. A fully offline LAN with Home Assistant, the Bridge, and the Braumeister is a potential target. See the upstream discussion in [Bridge PR #20](https://github.com/omphteliba/ha-speidel-braumeister/pull/20).
