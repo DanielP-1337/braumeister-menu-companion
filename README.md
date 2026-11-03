@@ -27,3 +27,9 @@ The integration calls the Bridge on `127.0.0.1:8642` from HA Core and waits for 
 The dashboard control path was tested end to end on a Braumeister 20L Plus. Menu navigation also worked while the browser was signed out of MySpeidel.
 
 Testing Home Assistant and the Bridge with internet access blocked is still pending. The tested Bridge control path delivers a local key only after a matching poll receives the expected MySpeidel acknowledgment. A fully offline LAN with Home Assistant, the Bridge, and the Braumeister is a potential target. See the upstream discussion in [Bridge PR #20](https://github.com/omphteliba/ha-speidel-braumeister/pull/20).
+
+## Observed on the device: Water filled?
+
+After choosing a recipe on the Braumeister 20L Plus (firmware 1.1.27), the device shows its water confirmation screen. The two middle arrow keys change a displayed time value in 30-minute steps. Its meaning, the effect of confirming at zero or at a positive value, and the timing of pump or heater activation still need verification. Delayed preheating is a hypothesis. The next protocol check is to compare display and recorder data before and after a single arrow press, leaving the confirmation button untouched.
+
+The next development focus is manual-mode pump and heater control. Verify the individual commands and resulting actuator states before exposing them through the Bridge or dashboard.
