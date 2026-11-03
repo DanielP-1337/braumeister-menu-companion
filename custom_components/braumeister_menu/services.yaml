@@ -1,0 +1,20 @@
+navigate:
+  name: Navigate the Braumeister menu
+  description: Queue one local menu action and wait for the bridge result.
+  fields:
+    action:
+      name: Menu action
+      required: true
+      selector:
+        select:
+          options:
+            - open_settings
+            - close_settings
+            - open_manual
+            - close_manual
+            - open_recipe_list
+            - close_recipe_list
+            - open_recipe_selection
+            - cancel_recipe_selection
+            - recipe_down
+            - recipe_up
