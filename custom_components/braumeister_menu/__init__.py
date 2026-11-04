@@ -71,12 +71,14 @@ async def async_setup(hass, config):
                 actuator = action in ACTUATOR_FLAGS
                 screen = "4006" if actuator else SCREENS[action]
                 flags = ACTUATOR_FLAGS[action] if actuator else {"ph"}
-                if (
-                    len(fields) < 15 or fields[3] != screen
-                    or fields[14] not in flags or not 0 <= age < 5
-                    or (actuator and device.get("last_response_source") not in ("cloud", "local_control"))
-                ):
-                    raise HomeAssistantError("Wait for a fresh matching device state")
+                if not 0 <= age < 5:
+                    raise HomeAssistantError("The bridge has no fresh device status (less than 5 seconds old)")
+                if len(fields) < 15 or fields[3] != screen:
+                    raise HomeAssistantError("The device is not on the screen required for this action")
+                if fields[14] not in flags:
+                    raise HomeAssistantError("The current pump and heater state does not allow this action")
+                if actuator and device.get("last_response_source") not in ("cloud", "local_control"):
+                    raise HomeAssistantError("The bridge has no recent cloud or local control response")
 
                 actual_id = device["device_id"]
                 queued = await request("POST", "control", json={"device_id": actual_id, "action": action})
