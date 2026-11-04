@@ -23,6 +23,12 @@ SCREENS = {
     "recipe_down": "2015",
     "recipe_up": "2015",
 }
+ACTUATOR_FLAGS = {
+    "pump_on": {"ph", "pH", "pi"},
+    "pump_off": {"Ph", "PH", "Pi"},
+    "heater_on": {"ph", "Ph"},
+    "heater_off": {"pH", "PH", "Pi", "pi"},
+}
 CONFIG_SCHEMA = vol.Schema(
     {vol.Required(DOMAIN): {vol.Required("device_id"): cv.string}},
     extra=vol.ALLOW_EXTRA,
@@ -62,11 +68,15 @@ async def async_setup(hass, config):
                 parts = device.get("bm_stat", "").split(";", 4)
                 fields = parts[3].split("X", 15) if len(parts) >= 4 else []
                 age = status["now"] - device.get("bm_stat_received", 0)
+                actuator = action in ACTUATOR_FLAGS
+                screen = "4006" if actuator else SCREENS[action]
+                flags = ACTUATOR_FLAGS[action] if actuator else {"ph"}
                 if (
-                    len(fields) < 15 or fields[3] != SCREENS[action]
-                    or fields[14] != "ph" or not 0 <= age < 5
+                    len(fields) < 15 or fields[3] != screen
+                    or fields[14] not in flags or not 0 <= age < 5
+                    or (actuator and device.get("last_response_source") not in ("cloud", "local_control"))
                 ):
-                    raise HomeAssistantError("Wait for a fresh matching screen with both actuators off")
+                    raise HomeAssistantError("Wait for a fresh matching device state")
 
                 actual_id = device["device_id"]
                 queued = await request("POST", "control", json={"device_id": actual_id, "action": action})
@@ -96,6 +106,11 @@ async def async_setup(hass, config):
     hass.services.async_register(
         DOMAIN, "navigate", navigate,
         schema=vol.Schema({vol.Required("action"): vol.In(SCREENS)}),
+        supports_response=SupportsResponse.ONLY,
+    )
+    hass.services.async_register(
+        DOMAIN, "set_actuator", navigate,
+        schema=vol.Schema({vol.Required("action"): vol.In(ACTUATOR_FLAGS)}),
         supports_response=SupportsResponse.ONLY,
     )
     return True

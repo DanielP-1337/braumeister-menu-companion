@@ -32,4 +32,7 @@ Testing Home Assistant and the Bridge with internet access blocked is still pend
 
 After choosing a recipe on the Braumeister 20L Plus (firmware 1.1.27), the device shows its water confirmation screen. The two middle arrow keys change a displayed time value in 30-minute steps. Its meaning, the effect of confirming at zero or at a positive value, and the timing of pump or heater activation still need verification. Delayed preheating is a hypothesis. The next protocol check is to compare display and recorder data before and after a single arrow press, leaving the confirmation button untouched.
 
-The next development focus is manual-mode pump and heater control. Verify the individual commands and resulting actuator states before exposing them through the Bridge or dashboard.
+The `braumeister_menu.set_actuator` action supports manual pump and heater
+control with Bridge `0.3.2-control.3-beta.3`. It requires an administrator,
+fresh matching device telemetry, and the corresponding Bridge opt-in.
+Configure the dashboard opt-ins separately in the Display Card.

@@ -18,3 +18,17 @@ navigate:
             - cancel_recipe_selection
             - recipe_down
             - recipe_up
+set_actuator:
+  name: Set a manual Braumeister actuator
+  description: Request one pump or heater action and wait for the bridge result.
+  fields:
+    action:
+      name: Actuator action
+      required: true
+      selector:
+        select:
+          options:
+            - pump_on
+            - pump_off
+            - heater_on
+            - heater_off
