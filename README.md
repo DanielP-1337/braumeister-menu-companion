@@ -30,6 +30,15 @@ The dashboard control path was tested end to end on a Braumeister 20L Plus. Menu
 
 Testing Home Assistant and the Bridge with internet access blocked is still pending. The tested Bridge control path delivers a local key only after a matching poll receives the expected MySpeidel acknowledgment. A fully offline LAN with Home Assistant, the Bridge, and the Braumeister is a potential target. See the upstream discussion in [Bridge PR #20](https://github.com/omphteliba/ha-speidel-braumeister/pull/20).
 
+## Live test coverage for locales and units
+
+Live testing with MySpeidel and a physical Braumeister has so far used a German MySpeidel account, Celsius (°C), Plato (°P), and German date and time formats.
+
+- **MySpeidel account settings:** English, Fahrenheit (°F), and Specific Gravity (SG) have not been tested against the live API. Whether these settings change API values, units, field formats, or only the portal display is unknown. Test each setting separately against the German / °C / °P baseline, then test them together.
+- **System and browser locale:** Live tests with non-German system or browser languages and date/time formats, such as en-US, are pending. Test language and formatting separately while keeping the time zone fixed. Include 12-hour and 24-hour display, date rollover, and RTC monitoring where applicable.
+
+The Companion uses the Bridge API. Verify that it still identifies the device and reports the outcome of supported menu actions under these settings.
+
 ## Observed on the device: Water filled?
 
 After choosing a recipe on the Braumeister 20L Plus (firmware 1.1.27), the device shows its water confirmation screen. The two middle arrow keys change a displayed time value in 30-minute steps. Its meaning, the effect of confirming at zero or at a positive value, and the timing of pump or heater activation still need verification. Delayed preheating is a hypothesis. The next protocol check is to compare display and recorder data before and after a single arrow press, leaving the confirmation button untouched.
