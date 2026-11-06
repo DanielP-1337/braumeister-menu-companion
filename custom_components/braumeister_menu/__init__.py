@@ -142,12 +142,15 @@ def recipe_picker(device):
     """Return only recipe names and the highlighted slot to the dashboard."""
     parts = device.get("bm_stat", "").split(";", 4)
     fields = parts[3].split("X", 15) if len(parts) >= 4 else []
-    if len(fields) < 15 or fields[3] != "2015" or fields[9] not in ("0", "1", "2", "3"):
+    if len(fields) < 15 or fields[3] != "2015" or fields[8] not in tuple(map(str, range(1, 10))):
+        return None
+    slots = tuple(map(str, range(int(fields[8]))))
+    if fields[9] not in slots:
         return None
     recipes = {}
     for line in device.get("rz", "").splitlines()[1:]:
         head, separator, name = line.split(";", 1)[0].partition(".")
         values = head.split("X")
-        if separator and len(values) == 20 and values[0] in ("0", "1", "2", "3"):
+        if separator and len(values) == 20 and values[0] in slots:
             recipes[values[0]] = name.strip()
     return {"slot": int(fields[9]), "recipes": recipes}
