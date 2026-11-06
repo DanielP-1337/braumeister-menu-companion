@@ -40,3 +40,11 @@ this adapter, deployment, HA restart or recipe/program start was performed.
 
 Run tests with the development dependencies in `requirements_test.txt` and
 `pytest`. The Bridge uses a separate loopback-cloud suite. See [beta installation notes](../release-v0.1.0-beta.6.md). Controlled local-API hardware tests remain pending.
+
+## User-reported hardware test — 2026-11-06
+
+The user reports a successful test on the real Braumeister after the HACS test releases Display Card 0.7.0-beta.9 and Companion 0.1.0-beta.7 were provided. The reported problem was the disabled Cancel button during pump purging; the confirmed input status was state 2300, flags Ph, indicator 000. Installed baseline: Bridge 0.3.2-control.4-beta.1 and HA integration 3.1.1-beta.2.
+
+This validates the reported pump-purge Cancel use case. The user had previously confirmed heating Cancel, the final-abort confirmation dialog and return to the main menu. This report does not establish validation of resume, water confirmation, delayed start, or every program stage. It also does not prove that the original installed UI failure was caused by a string-valued screen code.
+
+Card beta.9 accepts numeric and numeric-string screen codes at the menu lookup/dispatch boundary; all seven local Node test scripts passed. Companion beta.7 retains beta.6 control rules. Python tests were not rerun in this follow-up because the available interpreter lacks pytest; earlier suite results remain historical. The assistant issued no appliance commands.
