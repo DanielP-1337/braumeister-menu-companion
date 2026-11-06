@@ -1,9 +1,10 @@
 # Braumeister Local Menu
 
-Local/unreleased program-control work is described in
+Program-control beta work is described in
 [the preparation notes](docs/program-control-preparation.md). It needs the
-matching experimental Bridge and Card branches and is not part of a published
-HACS version yet.
+matching experimental Bridge 0.3.2-control.4-beta.1 and Display Card
+0.7.0-beta.8. Water confirmation, delayed start and heating-stage resume remain
+unsupported. These new local transitions are not hardware-validated yet.
 
 **Disclaimer:** This project is an independent open-source development and is not affiliated with, funded by, or endorsed by Speidel Tank- und Behälterbau GmbH or any of its affiliates. "Braumeister" and "MySpeidel" are trademarks of their respective owners.
 

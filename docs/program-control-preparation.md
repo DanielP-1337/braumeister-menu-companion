@@ -1,4 +1,4 @@
-# Local program-control adapter — not released or deployed
+# Program-control adapter — 0.1.0-beta.6
 
 This branch adds recipe confirmation (`navigate: select_recipe`) and a separate
 response-only `braumeister_menu.program_control` service. Advertised actions:
@@ -39,6 +39,4 @@ with synthetic HA/HTTP objects and real voluptuous schemas. No hardware test of
 this adapter, deployment, HA restart or recipe/program start was performed.
 
 Run tests with the development dependencies in `requirements_test.txt` and
-`pytest`. The Bridge uses a separate loopback-cloud suite. Release/version
-packaging and controlled local-API hardware tests are still pending; keep the
-currently installed versions until an explicitly prepared beta is available.
+`pytest`. The Bridge uses a separate loopback-cloud suite. See [beta installation notes](../release-v0.1.0-beta.6.md). Controlled local-API hardware tests remain pending.
