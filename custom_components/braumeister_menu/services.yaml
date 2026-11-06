@@ -18,6 +18,20 @@ navigate:
             - cancel_recipe_selection
             - recipe_down
             - recipe_up
+            - select_recipe
+program_control:
+  name: Control an evidenced Braumeister program transition
+  description: Pause or abort an evidenced stage; resume is limited to pump purging and requires Bridge permissions.
+  fields:
+    action:
+      name: Program action
+      required: true
+      selector:
+        select:
+          options:
+            - request_program_pause
+            - abort_program
+            - resume_program
 set_actuator:
   name: Set a manual Braumeister actuator
   description: Request one pump or heater action and wait for the bridge result.

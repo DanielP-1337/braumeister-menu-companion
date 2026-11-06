@@ -1,0 +1,5 @@
+aiohttp
+pytest
+pytest-asyncio
+voluptuous==0.15.2
+ruff

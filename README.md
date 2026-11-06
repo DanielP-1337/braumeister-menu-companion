@@ -1,5 +1,10 @@
 # Braumeister Local Menu
 
+Local/unreleased program-control work is described in
+[the preparation notes](docs/program-control-preparation.md). It needs the
+matching experimental Bridge and Card branches and is not part of a published
+HACS version yet.
+
 **Disclaimer:** This project is an independent open-source development and is not affiliated with, funded by, or endorsed by Speidel Tank- und Behälterbau GmbH or any of its affiliates. "Braumeister" and "MySpeidel" are trademarks of their respective owners.
 
 This Home Assistant integration connects the [Braumeister Display Card](https://github.com/DanielP-1337/braumeister-display-card) to the [upstream Braumeister Bridge](https://github.com/omphteliba/ha-speidel-braumeister/tree/main/braumeister_bridge). It requires a bridge build that includes the local control API from [Bridge PR #20](https://github.com/omphteliba/ha-speidel-braumeister/pull/20) and Display Card v0.7.0-beta.1 or later.
