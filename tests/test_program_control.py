@@ -70,11 +70,30 @@ async def adapter(snapshot, admin=True):
     )
     await namespace["async_setup"](hass, {"braumeister_menu": {"device_id": DEVICE}})
 
-    async def call(service, action):
+    async def call(service, action=None):
         fn, schema = handlers[service]
-        return await fn(SimpleNamespace(data=schema({"action": action}), context=SimpleNamespace(user_id="user")))
+        return await fn(SimpleNamespace(data=schema({} if action is None else {"action": action}), context=SimpleNamespace(user_id="user")))
 
     return call, calls, handlers, HAError
+
+
+async def test_recipe_snapshot_is_read_only():
+    snapshot = status("2015", "ph", "000")
+    snapshot["devices"][0]["rz"] = "header\n" + "X".join(["0"] * 20) + ".Recipe A;"
+    call, requests, _, _ = await adapter(snapshot)
+    assert await call("get_recipe_picker") == {"picker": {"slot": 0, "recipes": {"0": "Recipe A"}}}
+    assert len(requests) == 1
+    assert requests[0][:2] == ("GET", "http://127.0.0.1:8642/api/status")
+
+
+async def test_recipe_snapshot_rejects_non_admin_and_stale_status():
+    call, requests, _, error = await adapter(status("2015", "ph", "000"), admin=False)
+    with pytest.raises(error):
+        await call("get_recipe_picker")
+    assert requests == []
+    call, requests, _, _ = await adapter(status("2015", "ph", "000", age=5))
+    assert await call("get_recipe_picker") == {"picker": None}
+    assert all(method == "GET" for method, _, _ in requests)
 
 
 @pytest.mark.parametrize(("service", "action", "screen", "flags", "indicator"), [

@@ -46,3 +46,6 @@ set_actuator:
             - pump_off
             - heater_on
             - heater_off
+get_recipe_picker:
+  name: Read recipe selection
+  description: Reads the existing Bridge status and recipe list without sending a device command.

@@ -120,6 +120,25 @@ async def async_setup(hass, config):
             except (ClientError, TimeoutError, ValueError, KeyError, TypeError) as err:
                 raise HomeAssistantError("Could not verify the bridge action") from err
 
+    async def get_recipe_picker(call):
+        """Read the existing Bridge snapshot without queuing a device command."""
+        user = await hass.auth.async_get_user(call.context.user_id) if call.context.user_id else None
+        if user is None or not user.is_admin:
+            raise HomeAssistantError("An administrator must request the recipe picker")
+        try:
+            snapshot = await request("GET", "status")
+            for device in snapshot["devices"]:
+                if device["device_id"].lower() == device_id.lower():
+                    age = snapshot["now"] - device.get("bm_stat_received", 0)
+                    return {"picker": recipe_picker(device) if 0 <= age < 5 else None}
+            return {"picker": None}
+        except (ClientError, TimeoutError, ValueError, KeyError, TypeError) as err:
+            raise HomeAssistantError("Could not read the recipe picker") from err
+
+    hass.services.async_register(
+        DOMAIN, "get_recipe_picker", get_recipe_picker,
+        schema=vol.Schema({}), supports_response=SupportsResponse.ONLY,
+    )
     hass.services.async_register(
         DOMAIN, "navigate", navigate,
         schema=vol.Schema({vol.Required("action"): vol.In(SCREENS)}),
