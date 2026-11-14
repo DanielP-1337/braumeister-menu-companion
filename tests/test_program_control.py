@@ -19,6 +19,7 @@ def status(screen, flags, indicator, age=0.5, source="cloud"):
 
 async def adapter(snapshot, admin=True):
     calls, handlers = [], {}
+    events = []
     queued_action = [None]
 
     class HAError(Exception):
@@ -65,6 +66,7 @@ async def adapter(snapshot, admin=True):
     with patch.dict("sys.modules", stubs):
         exec(compile(source.read_text(encoding="utf-8"), str(source), "exec"), namespace)
     hass = SimpleNamespace(
+        bus=SimpleNamespace(async_fire=lambda *args: events.append(args)),
         auth=SimpleNamespace(async_get_user=AsyncMock(return_value=SimpleNamespace(is_admin=admin))),
         services=SimpleNamespace(async_register=lambda domain, name, fn, **kw: handlers.update({name: (fn, kw["schema"])})),
     )
@@ -74,6 +76,7 @@ async def adapter(snapshot, admin=True):
         fn, schema = handlers[service]
         return await fn(SimpleNamespace(data=schema({} if action is None else {"action": action}), context=SimpleNamespace(user_id="user")))
 
+    handlers["_events"] = events
     return call, calls, handlers, HAError
 
 
@@ -122,7 +125,7 @@ async def test_supported_adapter_actions(service, action, screen, flags, indicat
     ("request_program_pause", "2310", "ph", "000", .5, "cloud", True),
     ("resume_program", "2300", "ph", "120", 5, "cloud", True),
     ("resume_program", "2300", "ph", "120", -1, "cloud", True),
-    ("resume_program", "2300", "ph", "120", .5, "local", True),
+    ("resume_program", "2300", "ph", "120", .5, "unknown", True),
     ("resume_program", "2300", "ph", "120", .5, "cloud", False),
 ])
 async def test_refused_context_never_posts(action, screen, flags, indicator, age, source, admin):
@@ -138,3 +141,18 @@ async def test_unverified_actions_are_absent_from_real_service_schemas():
         with pytest.raises(vol.Invalid):
             await call("program_control", action)
     assert requests == []
+
+
+@pytest.mark.parametrize("source", ["local", "local_control"])
+async def test_local_ack_allows_verified_controls_and_requests_refresh(source):
+    call, requests, handlers, _ = await adapter(status("2300", "ph", "120", source=source))
+    assert (await call("program_control", "resume_program"))["result"] == "confirmed"
+    assert handlers["_events"] == [("braumeister_menu_updated", {"device_id": DEVICE})]
+    assert all(url.startswith("http://127.0.0.1:8642/api/") for _, url, _ in requests)
+
+
+async def test_local_stale_status_still_blocks_control():
+    call, requests, _, error = await adapter(status("2300", "ph", "120", age=5, source="local"))
+    with pytest.raises(error):
+        await call("program_control", "resume_program")
+    assert not any(method == "POST" for method, _, _ in requests)

@@ -92,8 +92,8 @@ async def async_setup(hass, config):
                     raise HomeAssistantError("The current program screen or pause indicator does not allow this action")
                 if action == "select_recipe" and (len(fields) < 16 or fields[15] != "000"):
                     raise HomeAssistantError("Recipe selection must not be interrupted")
-                if (actuator or program) and device.get("last_response_source") not in ("cloud", "local_control"):
-                    raise HomeAssistantError("The bridge has no recent cloud or local control response")
+                if (actuator or program) and device.get("last_response_source") not in ("cloud", "local_control", "local"):
+                    raise HomeAssistantError("The bridge has no recent acknowledged device response")
 
                 actual_id = device["device_id"]
                 queued = await request("POST", "control", json={"device_id": actual_id, "action": action})
@@ -115,6 +115,8 @@ async def async_setup(hass, config):
                                 if entry["device_id"] == actual_id:
                                     result["picker"] = recipe_picker(entry)
                                     break
+                        if result.get("result") == "confirmed":
+                            hass.bus.async_fire("braumeister_menu_updated", {"device_id": actual_id})
                         return result
                 return {"result": "unconfirmed"}
             except (ClientError, TimeoutError, ValueError, KeyError, TypeError) as err:
