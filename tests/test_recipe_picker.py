@@ -15,7 +15,7 @@ picker = namespace["recipe_picker"]
 def device(count, slot):
     fields = ["0"] * 16
     fields[3], fields[8], fields[9] = "2015", str(count), str(slot)
-    recipes = ["header"] + ["X".join([str(i)] + ["0"] * 19) + f".Recipe {i + 1};" for i in range(10)]
+    recipes = ["header"] + ["X".join([str(i)] + ["0"] * 19) + f".Recipe {i + 1};" for i in range(count if isinstance(count, int) else 0)]
     return {"bm_stat": "FW;TEST;1;" + "X".join(fields), "rz": "\n".join(recipes)}
 
 
@@ -26,6 +26,15 @@ def test_all_live_slots_and_no_stale_extra_entries(count):
         assert result == {"slot": slot, "recipes": {str(i): f"Recipe {i + 1}" for i in range(count)}}
 
 
-@pytest.mark.parametrize("count,slot", [(0, 0), (10, 0), (9, 9), (4, 4), (9, -1), ("bad", 0)])
+@pytest.mark.parametrize("count,slot", [(0, 0), (9, 9), (4, 4), (9, -1), ("bad", 0)])
 def test_invalid_count_or_selection(count, slot):
     assert picker(device(count, slot)) is None
+
+
+def test_status_count_one_does_not_hide_other_device_recipes():
+    for slot in range(9):
+        snapshot = device(9, slot)
+        snapshot["bm_stat"] = device(1, slot)["bm_stat"]
+        result = picker(snapshot)
+        assert len(result["recipes"]) == 9
+        assert result["slot"] == slot
