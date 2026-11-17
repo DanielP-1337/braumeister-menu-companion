@@ -109,6 +109,7 @@ async def test_recipe_snapshot_rejects_non_admin_and_stale_status():
     ("program_control", "start_delay_up", "2030", "ph", "000"),
     ("program_control", "start_delay_down", "2111", "ph", "000"),
     ("program_control", "confirm_start_delay", "2111", "ph", "000"),
+    ("program_control", "start_now", "2120", "ph", "000"),
     ("program_control", "cancel_start_delay", "2120", "ph", "000"),
     ("program_control", "cancel_water_prompt", "2111", "ph", "000"),
     ("program_control", "request_program_pause", "2300", "Ph", "000"),
@@ -128,6 +129,10 @@ async def test_supported_adapter_actions(service, action, screen, flags, indicat
 
 @pytest.mark.parametrize(("action", "screen", "flags", "indicator", "age", "source", "admin"), [
     ("resume_program", "2410", "ph", "120", .5, "cloud", True),
+    ("start_now", "2030", "ph", "000", .5, "cloud", True),
+    ("start_now", "2120", "Ph", "000", .5, "cloud", True),
+    ("start_now", "2120", "ph", "000", 5, "cloud", True),
+    ("start_now", "2120", "ph", "000", .5, "cloud", False),
     ("resume_program", "2300", "ph", "000", .5, "cloud", True),
     ("abort_program", "2410", "ph", "000", .5, "cloud", True),
     ("abort_program", "2410", "PH", "120", .5, "cloud", True),

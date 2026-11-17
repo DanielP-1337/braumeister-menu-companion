@@ -30,6 +30,7 @@ SCREENS = {
     "cancel_temperature": "4007",
 }
 PROGRAM_RULES = {
+    "start_now": {"2120": ({"ph"}, "000")},
     "start_delay_up": {"2030": ({"ph"}, "000"), "2111": ({"ph"}, "000")},
     "start_delay_down": {"2111": ({"ph"}, "000")},
     "confirm_start_delay": {"2111": ({"ph"}, "000")},

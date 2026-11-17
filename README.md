@@ -1,3 +1,5 @@
+> New: [Start now beta](release-v0.1.0-beta.14.md).
+
 > New hardware-mapping beta: [versions, installation and test guide](release-v0.1.0-beta.13.md).
 
 # Braumeister Local Menu

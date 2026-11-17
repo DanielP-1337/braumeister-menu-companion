@@ -40,6 +40,7 @@ program_control:
             - start_delay_up
             - start_delay_down
             - confirm_start_delay
+            - start_now
             - cancel_water_prompt
             - cancel_start_delay
 set_actuator:
