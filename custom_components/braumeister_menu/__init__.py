@@ -23,8 +23,18 @@ SCREENS = {
     "recipe_down": "2015",
     "recipe_up": "2015",
     "select_recipe": "2015",
+    "open_temperature_editor": "4006",
+    "temperature_up": "4007",
+    "temperature_down": "4007",
+    "confirm_temperature": "4007",
+    "cancel_temperature": "4007",
 }
 PROGRAM_RULES = {
+    "start_delay_up": {"2030": ({"ph"}, "000"), "2111": ({"ph"}, "000")},
+    "start_delay_down": {"2111": ({"ph"}, "000")},
+    "confirm_start_delay": {"2111": ({"ph"}, "000")},
+    "cancel_water_prompt": {"2111": ({"ph"}, "000")},
+    "cancel_start_delay": {"2120": ({"ph"}, "000")},
     "request_program_pause": {
         "2300": ({"ph", "Ph"}, "000"),
         "2410": ({"ph", "Ph", "pH", "PH", "pi", "Pi", "qh", "qH", "qi"}, "000"),

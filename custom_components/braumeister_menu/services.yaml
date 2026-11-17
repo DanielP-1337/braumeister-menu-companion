@@ -19,9 +19,14 @@ navigate:
             - recipe_down
             - recipe_up
             - select_recipe
+            - open_temperature_editor
+            - temperature_up
+            - temperature_down
+            - confirm_temperature
+            - cancel_temperature
 program_control:
   name: Control an evidenced Braumeister program transition
-  description: Pause or abort an evidenced stage; resume is limited to pump purging and requires Bridge permissions.
+  description: Control verified program and delayed-start transitions. Delayed-start confirmation requires Bridge program control and remote heating permissions.
   fields:
     action:
       name: Program action
@@ -32,6 +37,11 @@ program_control:
             - request_program_pause
             - abort_program
             - resume_program
+            - start_delay_up
+            - start_delay_down
+            - confirm_start_delay
+            - cancel_water_prompt
+            - cancel_start_delay
 set_actuator:
   name: Set a manual Braumeister actuator
   description: Request one pump or heater action and wait for the bridge result.

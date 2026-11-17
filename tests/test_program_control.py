@@ -101,6 +101,16 @@ async def test_recipe_snapshot_rejects_non_admin_and_stale_status():
 
 @pytest.mark.parametrize(("service", "action", "screen", "flags", "indicator"), [
     ("navigate", "select_recipe", "2015", "ph", "000"),
+    ("navigate", "open_temperature_editor", "4006", "ph", "000"),
+    ("navigate", "temperature_up", "4007", "ph", "00T"),
+    ("navigate", "temperature_down", "4007", "ph", "00T"),
+    ("navigate", "confirm_temperature", "4007", "ph", "00T"),
+    ("navigate", "cancel_temperature", "4007", "ph", "00T"),
+    ("program_control", "start_delay_up", "2030", "ph", "000"),
+    ("program_control", "start_delay_down", "2111", "ph", "000"),
+    ("program_control", "confirm_start_delay", "2111", "ph", "000"),
+    ("program_control", "cancel_start_delay", "2120", "ph", "000"),
+    ("program_control", "cancel_water_prompt", "2111", "ph", "000"),
     ("program_control", "request_program_pause", "2300", "Ph", "000"),
     ("program_control", "request_program_pause", "2410", "PH", "000"),
     ("program_control", "abort_program", "2300", "ph", "120"),
@@ -137,7 +147,7 @@ async def test_refused_context_never_posts(action, screen, flags, indicator, age
 
 async def test_unverified_actions_are_absent_from_real_service_schemas():
     call, requests, _, _ = await adapter(status("2030", "ph", "000"))
-    for action in ("confirm_water_filled", "start_delay_down", "start_delay_up", "$k=4"):
+    for action in ("confirm_water_filled", "select_during_countdown", "$k=4"):
         with pytest.raises(vol.Invalid):
             await call("program_control", action)
     assert requests == []

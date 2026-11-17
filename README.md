@@ -1,3 +1,5 @@
+> New hardware-mapping beta: [versions, installation and test guide](release-v0.1.0-beta.13.md).
+
 # Braumeister Local Menu
 
 Program-control beta work is described in
