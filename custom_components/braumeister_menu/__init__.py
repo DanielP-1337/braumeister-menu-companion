@@ -120,10 +120,11 @@ async def async_setup(hass, config):
                     raise HomeAssistantError("The bridge has no fresh device status (less than 5 seconds old)")
                 if len(fields) < 15 or fields[3] != screen:
                     raise HomeAssistantError("The device is not on the screen required for this action")
-                if fields[14] not in flags:
-                    raise HomeAssistantError("The current pump and heater state does not allow this action")
+                context = f"action={action}, screen={fields[3]}, actuators={fields[14]}, indicator={fields[15] if len(fields) > 15 else 'missing'}"
                 if program and (program_rule is None or len(fields) < 16 or fields[15] != program_rule[1]):
-                    raise HomeAssistantError("The current program screen or pause indicator does not allow this action")
+                    raise HomeAssistantError(f"The current program screen or pause indicator does not allow this action ({context})")
+                if fields[14] not in flags:
+                    raise HomeAssistantError(f"The current pump and heater state does not allow this action ({context})")
                 if action == "select_recipe" and (len(fields) < 16 or fields[15] != "000"):
                     raise HomeAssistantError("Recipe selection must not be interrupted")
                 if (actuator or program) and device.get("last_response_source") not in ("cloud", "local_control", "local"):

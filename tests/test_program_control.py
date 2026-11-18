@@ -192,6 +192,22 @@ async def test_refused_context_never_posts(action, screen, flags, indicator, age
     assert not any(r[0] == "POST" for r in requests)
 
 
+async def test_rejection_identifies_actual_context_before_actuator_check():
+    call, requests, _, error = await adapter(status("3070", "qH", "000"))
+    with pytest.raises(error, match="program screen or pause indicator") as caught:
+        await call("program_control", "acknowledge_hop_addition")
+    assert "action=acknowledge_hop_addition, screen=3070, actuators=qH, indicator=000" in str(caught.value)
+    assert not any(r[0] == "POST" for r in requests)
+
+
+async def test_actuator_rejection_identifies_actual_context():
+    call, requests, _, error = await adapter(status("3080", "PH", "010"))
+    with pytest.raises(error, match="pump and heater") as caught:
+        await call("program_control", "acknowledge_hop_addition")
+    assert "screen=3080, actuators=PH, indicator=010" in str(caught.value)
+    assert not any(r[0] == "POST" for r in requests)
+
+
 async def test_unverified_actions_are_absent_from_real_service_schemas():
     call, requests, _, _ = await adapter(status("2030", "ph", "000"))
     for action in ("confirm_unknown_step", "select_during_countdown", "$k=4"):
