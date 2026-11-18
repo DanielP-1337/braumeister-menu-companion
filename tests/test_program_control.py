@@ -100,6 +100,14 @@ async def test_recipe_snapshot_rejects_non_admin_and_stale_status():
 
 
 @pytest.mark.parametrize(("service", "action", "screen", "flags", "indicator"), [
+    ("program_control", "confirm_lid_removed", "3010", "qH", "0DT"),
+    ("program_control", "acknowledge_rest_end", "2910", "Pi", "010"),
+    ("program_control", "confirm_malt_pipe_removed", "2930", "pH", "000"),
+    ("program_control", "start_boil", "2960", "pi", "000"),
+    ("program_control", "request_program_pause", "2910", "Pi", "010"),
+    ("program_control", "request_program_pause", "2930", "pH", "000"),
+    ("program_control", "request_program_pause", "2960", "pi", "000"),
+    ("program_control", "abort_program", "2960", "ph", "120"),
     ("program_control", "acknowledge_mash_temperature", "2510", "Pi", "010"),
     ("program_control", "open_malt_confirmation", "2610", "ph", "000"),
     ("program_control", "confirm_malt_added", "2705", "ph", "000"),

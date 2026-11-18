@@ -43,6 +43,10 @@ program_control:
             - start_now
             - confirm_water_filled
             - acknowledge_mash_temperature
+            - acknowledge_rest_end
+            - confirm_malt_pipe_removed
+            - start_boil
+            - confirm_lid_removed
             - open_malt_confirmation
             - confirm_malt_added
             - cancel_water_prompt

@@ -30,6 +30,10 @@ SCREENS = {
     "cancel_temperature": "4007",
 }
 PROGRAM_RULES = {
+    "confirm_lid_removed": {"3010": ({"qH"}, "0DT")},
+    "acknowledge_rest_end": {"2910": ({"Pi"}, "010")},
+    "confirm_malt_pipe_removed": {"2930": ({"pi", "pH"}, "000")},
+    "start_boil": {"2960": ({"pi", "pH"}, "000")},
     "acknowledge_mash_temperature": {"2510": ({"Pi"}, "010")},
     "open_malt_confirmation": {"2610": ({"ph"}, "000")},
     "confirm_malt_added": {"2705": ({"ph"}, "000")},
@@ -41,6 +45,8 @@ PROGRAM_RULES = {
     "cancel_water_prompt": {"2030": ({"ph"}, "000"), "2111": ({"ph"}, "000")},
     "cancel_start_delay": {"2120": ({"ph"}, "000")},
     "request_program_pause": {
+        "2910": ({"ph", "Ph", "pH", "PH", "pi", "Pi", "qh", "qH", "qi"}, "010"),
+        **{code: ({"ph", "Ph", "pH", "PH", "pi", "Pi", "qh", "qH", "qi"}, "000") for code in ("2930", "2960")},
         "2510": ({"Pi", "PH", "Ph", "ph", "pH", "pi"}, "010"),
         **{code: ({"ph", "Ph", "pH", "PH", "pi", "Pi", "qh", "qH", "qi"}, "000")
            for code in ("2610", "2705", "2810", "2820")},
@@ -48,7 +54,7 @@ PROGRAM_RULES = {
         "2310": ({"ph", "Ph"}, "000"),
         "2410": ({"ph", "Ph", "pH", "PH", "pi", "Pi", "qh", "qH", "qi"}, "000"),
     },
-    "abort_program": {**{code: ({"ph"}, "120") for code in ("2510", "2610", "2705", "2810", "2820")}, "2310": ({"ph"}, "120"), "2300": ({"ph"}, "120"), "2410": ({"ph"}, "120")},
+    "abort_program": {**{code: ({"ph"}, "120") for code in ("2510", "2610", "2705", "2810", "2820", "2910", "2930", "2960")}, "2310": ({"ph"}, "120"), "2300": ({"ph"}, "120"), "2410": ({"ph"}, "120")},
     "resume_program": {"2300": ({"ph"}, "120"), "2310": ({"ph"}, "120"), "2810": ({"ph"}, "120")},
 }
 ACTUATOR_FLAGS = {
