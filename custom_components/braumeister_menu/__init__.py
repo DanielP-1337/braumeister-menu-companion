@@ -48,6 +48,7 @@ PROGRAM_RULES = {
     "cancel_water_prompt": {"2030": ({"ph"}, "000"), "2111": ({"ph"}, "000")},
     "cancel_start_delay": {"2120": ({"ph"}, "000")},
     "request_program_pause": {
+        "3080": ({"qH"}, "010"),
         "2910": ({"ph", "Ph", "pH", "PH", "pi", "Pi", "qh", "qH", "qi"}, "010"),
         **{code: ({"ph", "Ph", "pH", "PH", "pi", "Pi", "qh", "qH", "qi"}, "000") for code in ("2930", "2960")},
         "2510": ({"Pi", "PH", "Ph", "ph", "pH", "pi"}, "010"),
@@ -58,7 +59,7 @@ PROGRAM_RULES = {
         "2410": ({"ph", "Ph", "pH", "PH", "pi", "Pi", "qh", "qH", "qi"}, "000"),
     },
     "abort_program": {**{code: ({"ph"}, "120") for code in ("2510", "2610", "2705", "2810", "2820", "2910", "2930", "2960")}, "2310": ({"ph"}, "120"), "2300": ({"ph"}, "120"), "2410": ({"ph"}, "120")},
-    "resume_program": {"2300": ({"ph"}, "120"), "2310": ({"ph"}, "120"), "2810": ({"ph"}, "120")},
+    "resume_program": {"2300": ({"ph"}, "120"), "2310": ({"ph"}, "120"), "2810": ({"ph"}, "120"), "2820": ({"ph"}, "120"), "3080": ({"ph"}, "120")},
 }
 ACTUATOR_FLAGS = {
     "pump_on": {"ph", "pH", "pi"},
@@ -109,6 +110,8 @@ async def async_setup(hass, config):
                 program = action in PROGRAM_RULES
                 screen = fields[3] if program and len(fields) >= 16 else "4006" if actuator else SCREENS.get(action)
                 program_rule = PROGRAM_RULES[action].get(screen) if program else None
+                if action == "confirm_lid_removed" and screen == "3010" and len(fields) >= 16 and fields[15] == "0D0":
+                    program_rule = ({"qH"}, "0D0")
                 flags = program_rule[0] if program_rule else ACTUATOR_FLAGS[action] if actuator else {"ph"}
                 if not 0 <= age < 5:
                     raise HomeAssistantError("The bridge has no fresh device status (less than 5 seconds old)")
