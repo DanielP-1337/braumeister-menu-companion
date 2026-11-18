@@ -49,7 +49,7 @@ PROGRAM_RULES = {
     "cancel_water_prompt": {"2030": ({"ph"}, "000"), "2111": ({"ph"}, "000")},
     "cancel_start_delay": {"2120": ({"ph"}, "000")},
     "request_program_pause": {
-        "3010": ({"PH"}, "000"),
+        "3010": ({"PH", "qH"}, "000"),
         "3450": ({"ph"}, "010"),
         "3080": ({"qH"}, "010"),
         "2910": ({"ph", "Ph", "pH", "PH", "pi", "Pi", "qh", "qH", "qi"}, "010"),
