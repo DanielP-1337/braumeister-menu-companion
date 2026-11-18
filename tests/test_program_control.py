@@ -126,6 +126,8 @@ async def test_recipe_snapshot_rejects_non_admin_and_stale_status():
     ("program_control", "abort_program", "2300", "ph", "120"),
     ("program_control", "abort_program", "2410", "ph", "120"),
     ("program_control", "resume_program", "2300", "ph", "120"),
+    ("program_control", "resume_program", "2310", "ph", "120"),
+    ("program_control", "resume_program", "2810", "ph", "120"),
 ])
 async def test_supported_adapter_actions(service, action, screen, flags, indicator):
     call, requests, _, _ = await adapter(status(screen, flags, indicator))
