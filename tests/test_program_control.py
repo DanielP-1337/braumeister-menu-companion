@@ -100,6 +100,15 @@ async def test_recipe_snapshot_rejects_non_admin_and_stale_status():
 
 
 @pytest.mark.parametrize(("service", "action", "screen", "flags", "indicator"), [
+    ("program_control", "acknowledge_mash_temperature", "2510", "Pi", "010"),
+    ("program_control", "open_malt_confirmation", "2610", "ph", "000"),
+    ("program_control", "confirm_malt_added", "2705", "ph", "000"),
+    ("program_control", "request_program_pause", "2810", "PH", "000"),
+    ("program_control", "abort_program", "2810", "ph", "120"),
+    ("program_control", "confirm_water_filled", "2030", "ph", "000"),
+    ("program_control", "cancel_water_prompt", "2030", "ph", "000"),
+    ("program_control", "request_program_pause", "2310", "ph", "000"),
+    ("program_control", "abort_program", "2310", "ph", "120"),
     ("navigate", "select_recipe", "2015", "ph", "000"),
     ("navigate", "open_temperature_editor", "4006", "ph", "000"),
     ("navigate", "temperature_up", "4007", "ph", "00T"),
@@ -137,7 +146,7 @@ async def test_supported_adapter_actions(service, action, screen, flags, indicat
     ("abort_program", "2410", "ph", "000", .5, "cloud", True),
     ("abort_program", "2410", "PH", "120", .5, "cloud", True),
     ("request_program_pause", "2410", "PH", "120", .5, "cloud", True),
-    ("request_program_pause", "2310", "ph", "000", .5, "cloud", True),
+    ("request_program_pause", "2310", "ph", "120", .5, "cloud", True),
     ("resume_program", "2300", "ph", "120", 5, "cloud", True),
     ("resume_program", "2300", "ph", "120", -1, "cloud", True),
     ("resume_program", "2300", "ph", "120", .5, "unknown", True),
@@ -152,7 +161,7 @@ async def test_refused_context_never_posts(action, screen, flags, indicator, age
 
 async def test_unverified_actions_are_absent_from_real_service_schemas():
     call, requests, _, _ = await adapter(status("2030", "ph", "000"))
-    for action in ("confirm_water_filled", "select_during_countdown", "$k=4"):
+    for action in ("confirm_unknown_step", "select_during_countdown", "$k=4"):
         with pytest.raises(vol.Invalid):
             await call("program_control", action)
     assert requests == []
