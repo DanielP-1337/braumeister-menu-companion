@@ -47,6 +47,9 @@ program_control:
             - confirm_malt_pipe_removed
             - start_boil
             - confirm_lid_removed
+            - acknowledge_hop_addition
+            - confirm_whirlpool
+            - finish_brewing
             - open_malt_confirmation
             - confirm_malt_added
             - cancel_water_prompt

@@ -30,6 +30,9 @@ SCREENS = {
     "cancel_temperature": "4007",
 }
 PROGRAM_RULES = {
+    "acknowledge_hop_addition": {"3080": ({"qH"}, "010")},
+    "confirm_whirlpool": {"3510": ({"ph"}, "000")},
+    "finish_brewing": {"3610": ({"ph"}, "000")},
     "confirm_lid_removed": {"3010": ({"qH"}, "0DT")},
     "acknowledge_rest_end": {"2910": ({"Pi"}, "010")},
     "confirm_malt_pipe_removed": {"2930": ({"pi", "pH"}, "000")},

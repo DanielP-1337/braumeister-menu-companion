@@ -100,6 +100,9 @@ async def test_recipe_snapshot_rejects_non_admin_and_stale_status():
 
 
 @pytest.mark.parametrize(("service", "action", "screen", "flags", "indicator"), [
+    ("program_control", "acknowledge_hop_addition", "3080", "qH", "010"),
+    ("program_control", "confirm_whirlpool", "3510", "ph", "000"),
+    ("program_control", "finish_brewing", "3610", "ph", "000"),
     ("program_control", "confirm_lid_removed", "3010", "qH", "0DT"),
     ("program_control", "acknowledge_rest_end", "2910", "Pi", "010"),
     ("program_control", "confirm_malt_pipe_removed", "2930", "pH", "000"),
@@ -147,6 +150,16 @@ async def test_supported_adapter_actions(service, action, screen, flags, indicat
 
 
 @pytest.mark.parametrize(("action", "screen", "flags", "indicator", "age", "source", "admin"), [
+    ("acknowledge_hop_addition", "3080", "qH", "120", .5, "cloud", True),
+    ("acknowledge_hop_addition", "3080", "qH", "000", .5, "cloud", True),
+    ("acknowledge_hop_addition", "3080", "PH", "010", .5, "cloud", True),
+    ("acknowledge_hop_addition", "3070", "qH", "010", .5, "cloud", True),
+    ("confirm_whirlpool", "3450", "ph", "010", .5, "cloud", True),
+    ("confirm_whirlpool", "3510", "PH", "000", .5, "cloud", True),
+    ("finish_brewing", "3510", "ph", "000", .5, "cloud", True),
+    ("finish_brewing", "3610", "ph", "120", .5, "cloud", True),
+    ("finish_brewing", "3610", "ph", "000", 5, "cloud", True),
+    ("confirm_whirlpool", "3510", "ph", "000", .5, "cloud", False),
     ("resume_program", "2410", "ph", "120", .5, "cloud", True),
     ("start_now", "2030", "ph", "000", .5, "cloud", True),
     ("start_now", "2120", "Ph", "000", .5, "cloud", True),
