@@ -35,7 +35,7 @@ PROGRAM_RULES = {
     "confirm_whirlpool": {"3510": ({"ph"}, "000")},
     "finish_brewing": {"3610": ({"ph"}, "000")},
     "confirm_lid_removed": {"3010": ({"qH"}, "0DT")},
-    "acknowledge_rest_end": {"2910": ({"Pi"}, "010")},
+    "acknowledge_rest_end": {"2910": ({"PH", "Pi"}, "010")},
     "confirm_malt_pipe_removed": {"2930": ({"pi", "pH"}, "000")},
     "start_boil": {"2960": ({"pi", "pH"}, "000")},
     "acknowledge_mash_temperature": {"2510": ({"Pi"}, "010")},
@@ -49,6 +49,7 @@ PROGRAM_RULES = {
     "cancel_water_prompt": {"2030": ({"ph"}, "000"), "2111": ({"ph"}, "000")},
     "cancel_start_delay": {"2120": ({"ph"}, "000")},
     "request_program_pause": {
+        "3010": ({"PH"}, "000"),
         "3450": ({"ph"}, "010"),
         "3080": ({"qH"}, "010"),
         "2910": ({"ph", "Ph", "pH", "PH", "pi", "Pi", "qh", "qH", "qi"}, "010"),
@@ -61,7 +62,7 @@ PROGRAM_RULES = {
         "2410": ({"ph", "Ph", "pH", "PH", "pi", "Pi", "qh", "qH", "qi"}, "000"),
     },
     "abort_program": {**{code: ({"ph"}, "120") for code in ("2510", "2610", "2705", "2810", "2820", "2910", "2930", "2960")}, "2310": ({"ph"}, "120"), "2300": ({"ph"}, "120"), "2410": ({"ph"}, "120")},
-    "resume_program": {"2300": ({"ph"}, "120"), "2310": ({"ph"}, "120"), "2810": ({"ph"}, "120"), "2820": ({"ph"}, "120"), "3080": ({"ph"}, "120"), "3450": ({"ph"}, "120")},
+    "resume_program": {"2300": ({"ph"}, "120"), "2310": ({"ph"}, "120"), "2810": ({"ph"}, "120"), "2820": ({"ph"}, "120"), "3080": ({"ph"}, "120"), "3450": ({"ph"}, "120"), "3010": ({"ph"}, "120")},
 }
 ACTUATOR_FLAGS = {
     "pump_on": {"ph", "pH", "pi"},
