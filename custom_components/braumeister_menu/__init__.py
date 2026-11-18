@@ -38,7 +38,7 @@ PROGRAM_RULES = {
     "acknowledge_rest_end": {"2910": ({"PH", "Pi"}, "010")},
     "confirm_malt_pipe_removed": {"2930": ({"pi", "pH"}, "000")},
     "start_boil": {"2960": ({"pi", "pH"}, "000")},
-    "acknowledge_mash_temperature": {"2510": ({"Pi"}, "010")},
+    "acknowledge_mash_temperature": {"2510": ({"Pi", "qi"}, "010")},
     "open_malt_confirmation": {"2610": ({"ph"}, "000")},
     "confirm_malt_added": {"2705": ({"ph"}, "000")},
     "confirm_water_filled": {"2030": ({"ph"}, "000")},
@@ -61,7 +61,7 @@ PROGRAM_RULES = {
         "2310": ({"ph", "Ph"}, "000"),
         "2410": ({"ph", "Ph", "pH", "PH", "pi", "Pi", "qh", "qH", "qi"}, "000"),
     },
-    "abort_program": {**{code: ({"ph"}, "120") for code in ("2510", "2610", "2705", "2810", "2820", "2910", "2930", "2960")}, "2310": ({"ph"}, "120"), "2300": ({"ph"}, "120"), "2410": ({"ph"}, "120")},
+    "abort_program": {"3010": ({"ph"}, "120"), **{code: ({"ph"}, "120") for code in ("2510", "2610", "2705", "2810", "2820", "2910", "2930", "2960")}, "2310": ({"ph"}, "120"), "2300": ({"ph"}, "120"), "2410": ({"ph"}, "120")},
     "resume_program": {"2300": ({"ph"}, "120"), "2310": ({"ph"}, "120"), "2810": ({"ph"}, "120"), "2820": ({"ph"}, "120"), "3080": ({"ph"}, "120"), "3450": ({"ph"}, "120"), "3010": ({"ph"}, "120")},
 }
 ACTUATOR_FLAGS = {
@@ -114,6 +114,8 @@ async def async_setup(hass, config):
                 screen = fields[3] if program and len(fields) >= 16 else "4006" if actuator else SCREENS.get(action)
                 program_rule = PROGRAM_RULES[action].get(screen) if program else None
                 if action == "confirm_lid_removed" and screen == "3010" and len(fields) >= 16 and fields[15] == "0D0":
+                    program_rule = ({"qH"}, "0D0")
+                if action == "request_program_pause" and screen == "3010" and len(fields) >= 16 and fields[15] == "0D0":
                     program_rule = ({"qH"}, "0D0")
                 flags = program_rule[0] if program_rule else ACTUATOR_FLAGS[action] if actuator else {"ph"}
                 if not 0 <= age < 5:
