@@ -50,6 +50,7 @@ program_control:
             - acknowledge_hop_addition
             - confirm_whirlpool
             - finish_brewing
+            - acknowledge_brew_complete
             - open_malt_confirmation
             - confirm_malt_added
             - cancel_water_prompt
